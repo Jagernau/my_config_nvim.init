@@ -19,7 +19,6 @@ nnoremap 88 :PlugInstall<CR>
 nnoremap 77 :LspInstallInfo<CR>
 
 
-autocmd FileType python let b:coc_suggest_disable = 1
 
 
 
@@ -48,11 +47,14 @@ Plug 'williamboman/nvim-lsp-installer'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 
 
 
 call plug#end()
+
+
 
 
 
@@ -135,8 +137,31 @@ EOF
 nnoremap 00 :NERDTree<CR>
 
 
+
+
+
 lua << EOF
 local nvim_lsp = require('lspconfig')
+
+require("indent_blankline").setup {
+    -- for example, context is off by default, use this to turn it on
+    show_current_context = true,
+    show_current_context_start = true,
+}
+
+
+
+
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+    show_end_of_line = true,
+    space_char_blankline = " ",
+}
+
+
 
 
 -- Use an on_attach function to only map the following keys
@@ -175,7 +200,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'pylsp', 'tsserver', 'eslint', 'grammarly', 'vuels', 'vuels', 'vimls', 'bashls', 'puppet', 'yamlls' }
+local servers = { 'pylsp', 'tsserver', 'eslint', 'grammarly', 'vuels', 'vuels', 'vimls', 'bashls', 'puppet', 'yamlls'}
 for _, lsp in pairs(servers) do
 
   
@@ -188,7 +213,6 @@ for _, lsp in pairs(servers) do
   require'lsp_signature'.on_attach(cfg, bufnr)
   require("lsp_signature").status_line(max_width)
   
-
 
 
 
