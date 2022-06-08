@@ -19,8 +19,7 @@ nnoremap 88 :PlugInstall<CR>
 nnoremap 77 :LspInstallInfo<CR>
 
 
-
-
+autocmd FileType python let b:coc_suggest_disable = 1
 
 
 call plug#begin('~/.vim/plugged')
@@ -46,10 +45,12 @@ Plug 'preservim/nerdtree'
 Plug 'williamboman/nvim-lsp-installer'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'ray-x/lsp_signature.nvim'
+
 Plug 'lukas-reineke/indent-blankline.nvim'
 
 
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 
 call plug#end()
@@ -58,14 +59,15 @@ call plug#end()
 
 
 
+
+
+
+
+
 colorscheme gruvbox
-" colorscheme OceanicNext
-"let g:material_terminal_italics = 1
-" variants: default, palenight, ocean, lighter, darker, default-community,
-"           palenight-community, ocean-community, lighter-community,
-"           darker-community
-"let g:material_theme_style = 'darker'
-"colorscheme material
+
+
+
 if (has('termguicolors'))
   set termguicolors
 endif
@@ -87,6 +89,10 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- luasnip setup
 local luasnip = require 'luasnip'
+
+
+
+
 
 
 -- nvim-cmp setup
@@ -136,12 +142,16 @@ EOF
 
 nnoremap 00 :NERDTree<CR>
 
-
+autocmd FileType sql setlocal omnifunc=vim_dadbod_completion#omni
 
 
 
 lua << EOF
 local nvim_lsp = require('lspconfig')
+
+
+require'lspconfig'.bashls.setup{}
+
 
 require("indent_blankline").setup {
     -- for example, context is off by default, use this to turn it on
@@ -200,28 +210,18 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'pylsp', 'tsserver', 'eslint', 'grammarly', 'vuels', 'vuels', 'vimls', 'bashls', 'puppet', 'yamlls'}
+local servers = { 'pyright', 'tsserver', 'eslint', 'grammarly', 'vuels', 'vuels', 'vimls', 'puppet', 'yamlls', 'rome'}
 for _, lsp in pairs(servers) do
 
+
   
-
-
-
-    
-  
-  require'lsp_signature'.setup(cfg)
-  require'lsp_signature'.on_attach(cfg, bufnr)
-  require("lsp_signature").status_line(max_width)
-  
-
-
 
 
   require('lspconfig')[lsp].setup {
     on_attach = on_attach,
     flags = {
       -- This will be the default in neovim 0.7+
-      debounce_text_changes = 100,
+      debounce_text_changes = 80,
     }
   }
 end
