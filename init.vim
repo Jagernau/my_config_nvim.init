@@ -17,7 +17,7 @@ inoremap jk <esc>
 nnoremap 99 :LspInfo<CR>
 nnoremap 88 :PlugInstall<CR>
 nnoremap 77 :LspInstallInfo<CR>
-
+nnoremap ,form :CocCommand prettier.formatFile
 
 autocmd FileType python let b:coc_suggest_disable = 1
 
@@ -51,15 +51,10 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
+Plug 'numToStr/Comment.nvim'
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
-
-
-
-
-
-
 
 
 
@@ -104,8 +99,8 @@ cmp.setup {
     end,
   },
   mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<Up>'] = cmp.mapping.select_prev_item(),
+    ['<Down>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -146,11 +141,18 @@ autocmd FileType sql setlocal omnifunc=vim_dadbod_completion#omni
 
 
 
+lua require('Comment').setup()
+
+
+
+
+
 lua << EOF
 local nvim_lsp = require('lspconfig')
 
 
 require'lspconfig'.bashls.setup{}
+
 
 
 require("indent_blankline").setup {
@@ -170,6 +172,7 @@ require("indent_blankline").setup {
     show_end_of_line = true,
     space_char_blankline = " ",
 }
+
 
 
 
@@ -210,10 +213,11 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'pyright', 'tsserver', 'eslint', 'grammarly', 'vuels', 'vuels', 'vimls', 'puppet', 'yamlls', 'rome'}
+local servers = { 'pyright', 'tsserver', 'eslint', 'vuels', 'vimls', 'bashls'}
 for _, lsp in pairs(servers) do
 
-
+  
+  
   
 
 
@@ -221,7 +225,7 @@ for _, lsp in pairs(servers) do
     on_attach = on_attach,
     flags = {
       -- This will be the default in neovim 0.7+
-      debounce_text_changes = 80,
+      debounce_text_changes = 50,
     }
   }
 end
